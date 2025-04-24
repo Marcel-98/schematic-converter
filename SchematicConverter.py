@@ -1019,7 +1019,7 @@ class RedirectText:
 class ImageToSchematic:
     def __init__(self, root, fsize=16, button_fsize=8):
         self.root = root
-        self.root.title("Image to Schematic")
+        self.root.title("Schematic Converter")
         self.fsize = fsize
         self.button_fsize = button_fsize
         self.export_process_running = False
