@@ -838,17 +838,17 @@ def flip(voxelmap,axis):
         case "x":
             constants = [(64*k, 64*(7-k), (1<<64)-1                        ) for k in range(4)]
         case "xy":
-            constants = [(k,   64*k, (((1<<(8*8))-1)//((1<<8)-1))*(((1<<(65*(8-k)))-1)//((1<<65)-1))) for k in range(1,8)]
+            constants = [(k,   64*k, (((1<<( 8*8))-1)//((1<< 8)-1))*(((1<<(65*(8-k)))-1)//((1<<65)-1))) for k in range(1,8)]
         case "zy":
-            constants = [(k,   8*k,  (((1<<(64*8))-1)//((1<<64)-1))*(((1<<(9*(8-k)))-1)//((1<<9)-1))) for k in range(1,8)]
+            constants = [(k,    8*k, (((1<<(64*8))-1)//((1<<64)-1))*(((1<<( 9*(8-k)))-1)//((1<< 9)-1))) for k in range(1,8)]
         case "xz":
-            constants = [(8*k, 64*k, 255*(((1<<(72*(8-k)))-1)//((1<<72)-1))                         ) for k in range(1,8)]
+            constants = [(8*k, 64*k, (((1<<( 1*8))-1)//((1<< 1)-1))*(((1<<(72*(8-k)))-1)//((1<<72)-1))) for k in range(1,8)]
         case "yx":
-            constants = [(k,   64*(7-k)+7, (((1<<(8*8))-1)//((1<<8)-1))*((((1<<(63*(k+1)))-1))//((1<<63)-1))) for k in range(7)]
+            constants = [(k,   64*(7-k)+ 7, (((1<<( 8*8))-1)//((1<< 8)-1))*((((1<<(63*(k+1)))-1))//((1<<63)-1))) for k in range(7)]
         case "yz":
-            constants = [(k,   8*(7-k)+7,  (((1<<(64*8))-1)//((1<<64)-1))*((((1<<(7*(k+1)))-1))//((1<<7)-1))) for k in range(7)]
+            constants = [(k,    8*(7-k)+ 7, (((1<<(64*8))-1)//((1<<64)-1))*((((1<<( 7*(k+1)))-1))//((1<< 7)-1))) for k in range(7)]
         case "zx":
-            constants = [(8*k, 64*(7-k)+7, (((1<<(1*8))-1)//((1<<1)-1))*((((1<<(56*(k+1)))-1))//((1<<56)-1))) for k in range(7)]
+            constants = [(8*k, 64*(7-k)+56, (((1<<( 1*8))-1)//((1<< 1)-1))*((((1<<(56*(k+1)))-1))//((1<<56)-1))) for k in range(7)]
         case _:
             raise IOError("invalid axis")
 
@@ -1260,7 +1260,7 @@ class ImageToSchematic:
                              "_vertical_slab"       :["Vertical Slab"    , {'none':"disable",'all':"eighths",'234':"quarters",'3':"halfs"}],
                              "_stairs"              :["Stairs"           , {'none':"disable",'all':"enable"}             ],
                              "_vertical_corner"     :["Vertical Corner"  , {'none':"disable",'all':"eighths",'234':"quarters",'3':"halfs"}],
-                             "_quarter_slab"        :["Quarter"          , {'none':"disable",'all':               "quarters",'2':"halfs"}          ],
+                             "_quarter_slab"        :["Quarter"          , {'none':"disable",'all':                "quarters",'2':"halfs"}          ],
                              "_vertical_quarter"    :["Vertical Quarter" , {'none':"disable",'all':"eighths",'234':"quarters",'3':"halfs"}],
                              "_corner_slab"         :["Corner Slab"      , {'none':"disable",'all':"enable"}             ],
                              "_vertical_corner_slab":["Vert. Corner Slab", {'none':"disable",'all':"enable"}             ],
@@ -1293,6 +1293,7 @@ class ImageToSchematic:
     def import_image(self):
         file_path = filedialog.askopenfilename(title="Select Heightmap Image", filetypes=[("Image Files", ("*.png", "*.jpg", "*.jpeg", "*.bmp", "*.tiff")), ("All Files", "*.*")])
         if file_path:
+
             image = Image.open(file_path)
             self.heightmap_image = np.array(image).astype(float)
             if len(self.heightmap_image.shape)>2:
@@ -1310,9 +1311,6 @@ class ImageToSchematic:
             self.voxelmap = None
             self.inverted = False
             self.mesh = None
-            self.yscale.set("1/32")
-
-            #!!!
 
             self.param_label_scale.configure(text="Pixels per block", bg=self.default_bg_color)
 
@@ -1322,6 +1320,7 @@ class ImageToSchematic:
                 menu.add_command(label=option, command=lambda opt=option:self.set_parameter_scale(opt))
 
             self.scale.set("8")
+            self.yscale.set("1/32")
 
             self.display_image()
             self.param_label_depth.configure(text="Depth Multiplier")
@@ -1375,8 +1374,6 @@ class ImageToSchematic:
             self.mesh_shape = self.mesh.vertices.max(axis=0) - self.mesh.vertices.min(axis=0)
             self.param_label_depth.configure(text="Resolution (blocks)")
             self.yscale.set("64")
-
-            #!!!
 
             self.param_label_scale.configure(text="Ray direction", bg=self.default_bg_color)
 
